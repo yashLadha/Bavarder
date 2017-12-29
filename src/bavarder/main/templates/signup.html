@@ -1,0 +1,29 @@
+{% extends "basic.html" %}
+{% load csstags %}
+{% block content %}
+    <form action="/signup/" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">Email address</label>
+            {{ form.email | addcss:'form-control, Email' }}
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password | addcss:'form-control, Password' }}
+        </div>
+        <div class="form-group">
+            <label for="InputPassword">Confirm Password</label>
+            {{ form.confirm_password | addcss:'form-control, Confirm Password' }}
+        </div>
+        <div class="form-group">
+            <label for="InputName">Enter Name</label>
+            {{ form.name | addcss:'form-control, Name' }}
+        </div>
+        <div class="form-group">
+            <label for="InputDate">Enter Birth Date</label>
+            {{ form.dob }}
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Sign Up</button>
+    </form>
+{% endblock %}
