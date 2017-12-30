@@ -1,5 +1,264 @@
-{% extends "basic.html" %}
+{% extends "basic.html" %} {% load csstags %} {% block content %}
+<div class="container">
+    <div id="chat-list" class="message-container">
+        <div class="chat-container left-chat">
+            <div class="row no-gutters justify-content-start">
+                <div class="col-1 box" style="text-align:center;">
+                    <img src="data:image/jpeg;base64,{{sender_img}}" alt="dummy image" />
+                </div>
+                <div class="col-11 box">
+                    <div class="card">
+                        <div class="card-block">
+                            This is some text within a card block. This is some text within a card block. This is some text within a card block. This
+                            is some text within a card block. This is some text within a card block. This is some text within
+                            a card block.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-{% block content %}
-    <p>Chat Page</p>
-{% endblock %}
+        <br>
+        <br>
+
+        <div class="chat-container right-chat">
+            <div class="row no-gutters justify-content-end">
+                <div class="col-11 box">
+                    <div class="card">
+                        <div class="card-block">
+                            This is some text within a card block. This is some text within a card block. This is some text within a card block. This
+                            is some text within a card block. This is some text within a card block. This is some text within
+                            a card block.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 box" style="text-align:center;">
+                    <img src="data:image/jpeg;base64,{{sender_img}}" alt="dummy image" />
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="chat-container right-chat">
+            <div class="row no-gutters justify-content-end">
+                <div class="col-11 box">
+                    <div class="card">
+                        <div class="card-block">
+                            This is some text within a card block. This is some text within a card block. This is some text within a card block. This
+                            is some text within a card block. This is some text within a card block. This is some text within
+                            a card block.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 box" style="text-align:center;">
+                    <img src="data:image/jpeg;base64,{{sender_img}}" alt="dummy image" />
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+
+        <div class="chat-container left-chat">
+            <div class="row no-gutters justify-content-start">
+                <div class="col-1 box" style="text-align:center;">
+                    <img src="/static/img/dummy.png" alt="dummy image" />
+                </div>
+                <div class="col-11 box">
+                    <div class="card">
+                        <div class="card-block">
+                            This is some text within a card block. This is some text within a card block. This is some text within a card block. This
+                            is some text within a card block. This is some text within a card block. This is some text within
+                            a card block.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+    </div>
+    <div class="input-group mb-6 sticky-bottom fixed-bottom">
+        <input type="text" id="message-data" class="form-control" placeholder="Type Message..." aria-label="Type Message..." aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button id="send-message" class="btn btn-primary" type="button">Submit</button>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block css %}
+<style>
+    body {
+        min-height: 100vh;
+    }
+
+    .chat-container {
+        width: 45vw;
+        margin-top: 6px;
+        margin-bottom: 6px;
+        height: auto;
+    }
+
+    .no-gutters {
+        margin-right: 0;
+        margin-left: 0;
+
+        >.col,
+        >[class*="col-"] {
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+    }
+
+    .box {
+        padding: 0 6px 0 6px;
+    }
+
+    .chat-container img {
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+    }
+
+    .container-fluid {
+        height: 100%;
+        min-height: 100%;
+        margin-top: 8px;
+    }
+
+    .left-chat {
+        float: left;
+        margin-left: 5px;
+    }
+
+    .right-chat {
+        float: right;
+        margin-right: 5px;
+    }
+
+    .message-container {
+        height: 50vm;
+    }
+
+    .card {
+        margin-left: 5px;
+    }
+
+    .card-block {
+        padding: 4px;
+    }
+
+    @media only screen and (max-width: 1200px) {
+
+        .card-block {
+            padding: 2px;
+            font-size: 0.9rem;
+        }
+
+        .page-wrapper {
+            width: 300px;
+        }
+
+        .chat-container img {
+            height: 40px;
+            width: 40px;
+        }
+    }
+
+    @media only screen and (max-width: 900px) {
+
+        .chat-container {
+            width: 70vw;
+            height: auto;
+        }
+
+        .chat-container img {
+            height: 30px;
+            width: 30px;
+        }
+
+        .card-block {
+            padding: 1.5px;
+            font-size: 0.8rem;
+        }
+
+        p {
+            font-size: 0.8rem;
+        }
+
+        .page-wrapper {
+            width: 200px;
+        }
+
+        .left-chat {
+            margin-left: 3px;
+        }
+
+        .right-chat {
+            margin-right: 3px;
+        }
+
+    }
+</style>
+{% endblock %} {% block script %}
+<script type="text/javascript">
+    var socket = new WebSocket('ws://' + window.location.host + '/chat/');
+    socket.onmessage = function (e) {
+        console.log(e.data);
+        var obj = JSON.parse(e.data);
+        var sender = obj["sender"];
+        var message = obj["message"];
+        var chatTemplate = "";
+        if (sender === "{{ name }}") {
+            chatTemplate = "<div class=\"chat-container right-chat\">"+
+            "<div class=\"row no-gutters justify-content-end\">"+
+                "<div class=\"col-11 box\">"+
+                    "<div class=\"card\">"+
+                        "<div class=\"card-block\">"+
+                            message+
+                        "</div>"+
+                    "</div>"+
+                "</div>"+
+                "<div class=\"col-1 box\" style=\"text-align:center;\">"+
+                    "<img src=\"data:image/jpeg;base64,{{sender_img}}\" alt=\"dummy image\" />"+
+                "</div>"+
+            "</div>"+
+        "</div>"+
+        "<br><br>";
+        } else {
+            chatTemplate = "<div class=\"chat-container left-chat\">"+
+            "<div class=\"row no-gutters justify-content-start\">"+
+                "<div class=\"col-1 box\" style=\"text-align:center;\">"+
+                    "<img src=\"data:image/jpeg;base64,{{sender_img}}\" alt=\"dummy image\" />"+
+                "</div>"+
+                "<div class=\"col-11 box\">"+
+                    "<div class=\"card\">"+
+                        "<div class=\"card-block\">"+
+                            message+
+                        "</div>"+
+                    "</div>"+
+                "</div>"+
+            "</div>"+
+        "</div><br><br>";
+        }
+        $("#chat-list").append(chatTemplate);
+    };
+    socket.onopen = function () {
+        socket.send("Chat connected");
+    };
+
+    function send_message(buttonId) {
+        $(document).on('click', buttonId, function (e) {
+            e.preventDefault();
+            var message = $('#message-data').val();
+            var view = {};
+            view['message'] = message;
+            view['sender'] = "{{ name }}";
+            socket.send(JSON.stringify(view));
+            $('#message-data').val('');
+        });
+    }
+
+    send_message('#send-message');
+</script> {% endblock %}
